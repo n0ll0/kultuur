@@ -1,35 +1,35 @@
-'use client'
+'use client';
 
-import React, {useEffect} from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
 // Fix Leaflet's default icon path issues
-delete L.Icon.Default.prototype._getIconUrl
+delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-})
+});
 
 interface Event {
-  id: number
-  title: string
-  date: string
-  time: string
-  location: string
-  description: string
-  coordinates: [number, number]
+  id: number;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  description: string;
+  coordinates: [number, number];
 }
 
 interface MapProps {
-  events: Event[]
+  events: Event[];
 }
 
 const Map: React.FC<MapProps> = ({ events }) => {
   // Calculate the center of Estonia
-  const estoniaCenter: [number, number] = [58.595272, 25.013607]
+  const estoniaCenter: [number, number] = [58.595272, 25.013607];
 
   useEffect(() => {
     const L = require('leaflet');
@@ -42,9 +42,9 @@ const Map: React.FC<MapProps> = ({ events }) => {
   }, []);
 
   return (
-    <MapContainer 
-      center={estoniaCenter} 
-      zoom={7} 
+    <MapContainer
+      center={estoniaCenter}
+      zoom={7}
       style={{ height: '100%', width: '100%' }}
       scrollWheelZoom={false}
       dragging={!L.Browser.mobile}
@@ -66,8 +66,8 @@ const Map: React.FC<MapProps> = ({ events }) => {
         </Marker>
       ))}
     </MapContainer>
-  )
-}
+  );
+};
 
 export default Map
 

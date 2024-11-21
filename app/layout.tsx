@@ -1,7 +1,6 @@
 import '@/styles/globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
-import { createSupabaseClient } from '@/lib/supabase'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,11 +14,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  try {
-    createSupabaseClient()
-  } catch (error) {
-    console.error('Error initializing Supabase client:', error)
-  }
   return (
     <html lang="et">
       <body className={inter.className}>

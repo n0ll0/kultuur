@@ -1,11 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { createSupabaseClient } from '@/lib/supabase';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from 'next/link';
+import EditEvent from '@/components/edit-event';
 
 interface Event {
   id: number;
@@ -20,8 +23,10 @@ interface Event {
 export default function AdminPanel() {
   const [events, setEvents] = useState<Event[]>([]);
   const [newEvent, setNewEvent] = useState<Partial<Event>>({});
-  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [stats, setStats] = useState({ totalEvents: 0, upcomingEvents: 0 });
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const editingId = searchParams.get('edit');
 
   useEffect(() => {
     fetchEvents();
@@ -29,7 +34,6 @@ export default function AdminPanel() {
   }, []);
 
   async function fetchEvents() {
-    const supabase = createSupabaseClient();
     const { data, error } = await supabase
       .from('events')
       .select('*');
@@ -42,7 +46,6 @@ export default function AdminPanel() {
   }
 
   async function fetchStats() {
-    const supabase = createSupabaseClient();
     const { data: allEvents, error: allEventsError } = await supabase
       .from('events')
       .select('date');
@@ -64,34 +67,20 @@ export default function AdminPanel() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const supabase = createSupabaseClient();
-    if (editingEvent) {
-      const { error } = await supabase
-        .from('events')
-        .update(newEvent)
-        .eq('id', editingEvent.id);
+    const { error } = await supabase
+      .from('events')
+      .insert(newEvent);
 
-      if (error) {
-        console.error('Error updating event:', error);
-      } else {
-        setEditingEvent(null);
-      }
+    if (error) {
+      console.error('Error creating event:', error);
     } else {
-      const { error } = await supabase
-        .from('events')
-        .insert(newEvent);
-
-      if (error) {
-        console.error('Error creating event:', error);
-      }
+      setNewEvent({});
+      fetchEvents();
+      fetchStats();
     }
-    setNewEvent({});
-    fetchEvents();
-    fetchStats();
   }
 
   async function handleDelete(id: number) {
-    const supabase = createSupabaseClient();
     const { error } = await supabase
       .from('events')
       .delete()
@@ -106,9 +95,17 @@ export default function AdminPanel() {
   }
 
   function handleDuplicate(event: Event) {
-    const duplicatedEvent = { ...event } as Partial<Pick<Event,'id'>>;
+    const duplicatedEvent = { ...event } as Partial<Event>;
     delete duplicatedEvent.id;
     setNewEvent(duplicatedEvent);
+  }
+
+  if (editingId) {
+    return <EditEvent id={parseInt(editingId)} onCancel={() => router.push('/admin')} onSave={() => {
+      router.push('/admin');
+      fetchEvents();
+      fetchStats();
+    }} />;
   }
 
   return (
@@ -174,7 +171,7 @@ export default function AdminPanel() {
           />
         </div>
         <Button type="submit" className="mt-4">
-          {editingEvent ? 'Update Event' : 'Add Event'}
+          Add Event
         </Button>
       </form>
 
@@ -189,7 +186,7 @@ export default function AdminPanel() {
               <p>{event.location}</p>
               <p>{event.description}</p>
               <div className="mt-4 space-x-2">
-                <Button onClick={() => setEditingEvent(event)}>Edit</Button>
+                <Button onClick={() => router.push(`/admin?edit=${event.id}`)}>Edit</Button>
                 <Button onClick={() => handleDelete(event.id)} variant="destructive">Delete</Button>
                 <Button onClick={() => handleDuplicate(event)} variant="outline">Duplicate</Button>
               </div>
