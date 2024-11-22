@@ -53,8 +53,6 @@ export default function Home() {
         </TabsList>
         <TabsContent value="list">
           <KultuuriSyndmused events={events} />
-
-
         </TabsContent>
         <TabsContent value="map" className="mt-4">
           <div className="h-[50vh] w-full sm:h-[500px]">
