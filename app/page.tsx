@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react'
-import KultuuriSyndmused from '@/components/kultuuri-syndmused'
+import SyndmusteList from '@/components/syndmuste-list'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import dynamic from 'next/dynamic'
 import { supabase, type Event } from '@/lib/supabase'
@@ -38,7 +38,7 @@ export default function Home() {
             <TabsTrigger value="map">Kaart</TabsTrigger>
           </TabsList>
           <TabsContent value="list">
-            <KultuuriSyndmused events={events} />
+            <SyndmusteList BIG={true} events={events} />
           </TabsContent>
           <TabsContent value="map" className="mt-4">
             <div className="h-[50vh] w-full sm:h-[500px]">

@@ -23,7 +23,9 @@ export default function RootLayout({
             <Link href="/admin" className="hover:underline">Admin</Link>
           </div>
         </nav>
+        <div className='container mx-auto px-4 py-8'>
         {children}
+        </div>
       </body>
     </html>
   )

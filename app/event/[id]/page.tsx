@@ -22,7 +22,7 @@ async function fetchEvent(id: string): Promise<Event | null> {
 }
 
 export default async function Syndmus({params}: {params: {id: string}}) {
-  const event = await fetchEvent(params.id);
+  const event = await fetchEvent((await params).id);
 
   if (!event) {
     notFound();
@@ -106,12 +106,12 @@ export default async function Syndmus({params}: {params: {id: string}}) {
           </div>
         </CardContent>
         <CardFooter>
-          <Button>Register for Event</Button>
+          <Button >Register for Event</Button>
         </CardFooter>
       </Card>
 
       <h2 className="text-2xl font-bold mb-4">Other Events</h2>
-      <Suspense fallback={<div>Loading events...</div>}>
+      <Suspense fallback={<div>Loading other events...</div>}>
         <SyndmusteList />
       </Suspense>
     </div>
