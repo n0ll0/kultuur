@@ -1,23 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import Link from 'next/link'
 
-interface Event {
-  id: number
-  title: string
-  date: string
-  time: string
-  location: string
-  description: string
-  coordinates: [number, number]
-}
+import { type Event } from '@/lib/supabase'
+
 export default function KultuuriSyndmused({events}:{events:Event[]}) {
-  
 
   return (
-    
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {events.map(event => (
               <Card key={event.id}>
@@ -42,12 +32,11 @@ export default function KultuuriSyndmused({events}:{events:Event[]}) {
                   <p>{event.description}</p>
                 </CardContent>
                 <CardFooter>
-                  <Button>Vaata lähemalt</Button>
+                  <Link href={`/event/${event.id}`}>Vaata lähemalt</Link>
                 </CardFooter>
               </Card>
             ))}
           </div>
-        
   )
 }
 

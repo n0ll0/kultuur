@@ -68,7 +68,7 @@ export default function EditEvent({ id, onCancel, onSave }: EditEventProps) {
         <CardTitle>Edit Event</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit}className="mb-6">
+        <form onSubmit={handleSubmit} className="mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               placeholder="Title"
